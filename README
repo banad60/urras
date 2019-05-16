@@ -34,7 +34,7 @@ Application:
                   ./urras_remote-setup.sh
 
  - The user enters twice the password for the privelegierten user of the server
-                   <Password>
+                   <Password> 
 
 After successful execution, the administrator can use login on the server without a
 password, assumed he is active logged in at the local ssh-agent with his private-key.

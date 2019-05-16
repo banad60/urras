@@ -23,9 +23,7 @@ For the application to work, some requirements are necessary:
 - in the user edit 'setup / basic_config.ini' according to your requirements:
 
     $ export DESTHOST = XXX.XXX.XXX.XXX
-
     $ export DESTHOSTNAME = 'TESTHOSTHAME'
-
     $ export DESTHOSTUSER = 'testuser'
 
 
@@ -35,7 +33,7 @@ For the application to work, some requirements are necessary:
 
 - the user enters twice the password for the privelegierten user of the server:
 
-    $ <Password>
+    $ password (ssh, sudo)
 
 
 After successful execution, the administrator can use login on the server without a password, assumed he is active logged in at the local ssh-agent with his private-key.
@@ -71,9 +69,7 @@ Damit die Anwendung funktioniert, sind einige Vorraussetzungen notwendig:
 - Der User editiert die 'setup/basic_config.ini' nach seinen Anforderungen:
 
     $ export DESTHOST=XXX.XXX.XXX.XXX
-
     $ export DESTHOSTNAME='TESTHOSTHAME'
-
     $ export DESTHOSTUSER='testuser'
 
 
@@ -84,7 +80,7 @@ Damit die Anwendung funktioniert, sind einige Vorraussetzungen notwendig:
 
 - Der User gibt zwei mal das Passwort für den privelegierten User des Servers ein:
 
-    $ <password>
+    $ password 
 
 
 Nach der erfolgreichen Ausführung kann sich der Administrator über ssh am Server ohne Passwort einloggen, vorausgesetzt er ist mit seinem Private-Key aktiv am localen ssh-agent angemeldet.
