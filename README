@@ -36,18 +36,18 @@ Application:
  - The user enters twice the password for the privelegierten user of the server
                    <Password>
 
-After successful execution, the administrator can use login on the server without a 
+After successful execution, the administrator can use login on the server without a
 password, assumed he is active logged in at the local ssh-agent with his private-key.
                    ssh -A root@XXX.XXX.XXX.XXX
 
-If the administrator is not logged in to the ssh-agent, then he have to use the 
+If the administrator is not logged in to the ssh-agent, then he have to use the
 password of the privileged user from the server.
 
 
 
 - DE-de -----------------------------------------------------------------------------
 
-urras ist dazu gedacht, dem System-Administrator auf einem frisch installierten 
+urras ist dazu gedacht, dem System-Administrator auf einem frisch installierten
 ubuntu-System (Server) von einer Arbeitsstation (Client) aus root-access auf
 dem Server einzurichten sowie dort eine Grundbasis an Tools in einer
 farb-unterstützten Consolen-Arbreitsubgebung bereit zu stellen.

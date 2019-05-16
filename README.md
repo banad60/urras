@@ -11,7 +11,7 @@ For the application to work, some requirements are necessary:
 
 2. at the client)
 - a user with the same name as the privileged user of the server. this user starts the application.
-- in $ HOME / .ssh this user must be the public-key with the ubuntu-fixed filename 'id_rsa.pub' 
+- in $ HOME / .ssh this user must be the public-key with the ubuntu-fixed filename 'id_rsa.pub'
 - the user is active with his public key at his localen ssh-agent logged in
 
 ## Application:
