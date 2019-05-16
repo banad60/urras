@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# usage:   ssh-export-id <host> [<user>]
+#
+# function                : install a id (publickey) of an user or root on remotehosts 
+# depends                 : ssh-copy-id tput ssh
+# autor                   : bb / bbpro - may 2019
+# note                    :
+
+
+# extend env
+#PATH=~/.local/bin:$PATH
+#export thisPATH=$PWD
+
+# include bbpro tput-colors
+. tput_init-colors;
+
+
+if [ -z $1 ]; then
+      printf "${bold}${red}!${reset} ${dimyellow}%s\n" "ssh-export-id: a destinationhost is required"
+      printf "  ${dimgreen}usage: %s${reset}\n" "${babyblue}ssh-export-id ${blutorange}<destinationhost> ${dimwhite}[${blutorange}<user>${dimwhite}]"
+      exit 1
+else
+      DESTINATIONHOST=$1
+      if [ -z $2 ]; then
+#            printf " ${yellow}* ${dimyellow}%s${reset}\n" "push the id to user $USER on $DESTINATIONHOST"
+#            ssh-copy-id -i $USER"@"$DESTINATIONHOST;
+#
+#            if ! ssh $USER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'ls '$HOME'/.ssh/|grep id_rsa.pub' >/dev/null 2>&1; then
+#                  printf " ${yellow}* ${dimyellow}%s${reset}\n" "upload id_rsa.pub to user $USER on $DESTINATIONHOST/~/.ssh"
+#                  scp -p $HOME/.ssh/id_rsa.pub $USER"@"$DESTINATIONHOST":.ssh"
+#                  ssh $USER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'chmod -x '$HOME'/.ssh/id_rsa.pub'
+#            fi
+            $0 $DESTINATIONHOST $USER
+      else
+            DESTINATIONUSER=$2
+            printf " ${yellow}* ${dimyellow}%s${reset}\n" "push the id to user $DESTINATIONUSER on $DESTINATIONHOST"
+            ssh-copy-id -i $DESTINATIONUSER"@"$DESTINATIONHOST;
+
+            if ! ssh $DESTINATIONUSER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'ls '$HOME'/.ssh|grep id_rsa.pub' >/dev/null 2>&1; then
+                  printf " ${yellow}* ${dimyellow}%s${reset}\n" "upload id_rsa.pub to user $DESTINATIONUSER on $DESTINATIONHOST/~/.ssh"
+                  scp -p $HOME/.ssh/id_rsa.pub $DESTINATIONUSER"@"$DESTINATIONHOST":.ssh"
+                  #ssh $DESTINATIONUSER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'chmod -x '$HOME'/.ssh/id_rsa.pub'
+            fi
+      fi;
+fi;
+
+exit $?
+

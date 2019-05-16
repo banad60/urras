@@ -1,0 +1,91 @@
+
+urras - ubuntu-remote-root-access-setup
+
+
+urras is designed to work on a freshly installed ubuntu system (server)
+from a workstation (client) from the system administrator getting root-access
+to set up the server as well with a base of tools and a color-supported
+working-evniroment ready to work.
+
+For the application to work, some requirements are necessary:
+ on the server)
+                 - a freshly installed ubuntun  (>= 18.04)
+                 - a user with sudo privilege, who is also on the
+                   client exists.
+ on the client)
+                 - a user with the same name as the privileged user
+                   of the server. this user starts the application.
+                 - in $ HOME / .ssh this user must be the public-key
+                   with the ubuntu-fixed filename 'id_rsa.pub'
+                 - the user is active with his public key at his localen
+                   ssh-agent logged in
+
+ application:
+ - the user changes to the client in the console in the directory of the application
+                 cd <DIRECTORY>
+
+ - in the user edit 'setup / basic_config.ini' according to your requirements
+                  export DESTHOST = XXX.XXX.XXX.XXX
+                  export DESTHOSTNAME = 'TESTHOSTHAME'
+                  export DESTHOSTUSER = 'testuser'
+
+ - the user starts the application with the call:
+                  ./urras_remote-setup.sh
+
+ - the user enters twice the password for the privelegierten user of the server
+                   <Password>
+
+after successful execution, the administrator can use ssh on the server
+log in without a password, provided that his public-key is active at localen
+ssh-agent logged in.
+                   ssh -A root@XXX.XXX.XXX.XXX
+
+if the administrator is not logged in to the ssh-agent, then he must have the password
+of the privileged user at the server.
+
+
+
+- DE-de -----------------------------------------------------------------------------
+
+urras is dazu gedacht, auf einem frisch installierten ubuntu-system (server)
+von einer arbeitsstation (client) aus dem system-administrator root-access auf
+dem server einzurichten sowie dort eine grundbasis an tools in einer
+farbunterstützten consolen-arbreitsubgebung bereit zu stellen.
+
+damit die anwendung funktioniert, sind einige vorraussetzungen notwendig:
+ auf dem server)
+                 - ein frish installietes ubuntun (>18.04)
+                 - ein user mit sudo privileg, der ebenfalls auch auf dem
+                   client existiert.
+ auf dem client)
+                 - ein user mit gleichen namen wie dem privilegierten user
+                   des servers. dieser user startet die anwendung.
+                 - in $HOME/.ssh dieses users muss sich der dessen public-key
+                   mit dem ubuntu-fixen dateiname 'id_rsa.pub' befinden
+                 - der user ist aktiv mit seinem public-key an seinem localen
+                   ssh-agent angemeldet
+
+ anwendung:
+
+ - der user wechselt auf dem client in der console in das verzeichnis der anwendung
+                 cd <VERZEICHNIS>
+
+ - in der user editiert 'setup/basic_config.ini' nach seinen anforderungen
+                  export DESTHOST=XXX.XXX.XXX.XXX
+                  export DESTHOSTNAME='TESTHOSTHAME'
+                  export DESTHOSTUSER='testuser'
+
+
+ - der user startet die anwendung mit dem aufruf:
+                  ./urras_remote-setup.sh
+
+ - der user gibt zwei mal das passwort für den privelegierten user des servers ein
+                   <password>
+
+nach der erfolgreichen ausführung kann sich der administrator über ssh am server
+ohne passwort einloggen, vorausgesetzt sein public-key ist aktiv am localen
+ssh-agent angemeldet.
+                   ssh -A root@XXX.XXX.XXX.XXX
+
+wenn der administrator nicht am ssh-agent angemeldet ist, dann muss er das passwort
+des privelegierten users am server benutzen.

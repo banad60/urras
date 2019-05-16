@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# usage: ssh-remove-id <destinationhost> [<user>]
+#
+# function                : removes a id (publickey) for a user or root  from remotehosts 
+# ssh-remove-id depends   : tput ssh
+# autor                   : bb / bbpro - may 2019
+# note                    :
+
+# - include color-library
+# include bbpro tput-colors
+. tput_init-colors;
+
+
+if [ -z $1 ]; then
+      printf "${bold}${red}!${reset} ${dimyellow}%s\n" "ssh-remove-id: a destinationhost is required"
+      printf "  ${dimgreen}usage: %s${reset}\n" "${babyblue}ssh-remove-id ${blutorange}<destinationhost> ${dimwhite}[${blutorange}<user>${dimwhite}]"
+      exit 1
+else
+      DESTINATIONHOST=$1
+      if [ -z $2 ]; then
+            # redirecting with local user, if no user was given
+            $0 $DESTINATIONHOST $USER
+      else
+            DESTINATIONUSER=$2
+            if [ "$DESTINATIONUSER" == "root" ]; then
+                  printf " ${yellow}* ${dimyellow}%s${reset}\n" "removing id in /root/.ssh/authorized_keys on $DESTINATIONUSER@$DESTINATIONHOST"
+#                  if ssh "root@"$DESTINATIONHOST -o PasswordAuthentication=no 'cat /root/.ssh/authorized_keys | grep "`cat /home/'$USER'/.ssh/id_rsa.pub`"' >/dev/null 2>&1; then
+                  if ssh "root@"$DESTINATIONHOST -o PasswordAuthentication=no 'export myPUBKEY="`cat /home/'$USER'/.ssh/id_rsa.pub`" && cat /root/.ssh/authorized_keys | grep "$myPUBKEY"' >/dev/null 2>&1; then
+
+                           printf " ${yellow}-> ${orange}%s${reset}\n" "backup id in root@$DESTINATIONHOST/root/.ssh/authorized_keys.bak"
+                           ssh "root@"$DESTINATIONHOST -o PasswordAuthentication=no 'cp /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bak'
+
+                           printf " ${yellow}-> ${orange}%s${reset}\n" "generate root@$DESTINATIONHOST/root/.ssh/authorized_keys.new"
+                           ssh "root@"$DESTINATIONHOST -o PasswordAuthentication=no 'export myPUBKEY="`cat /home/'$USER'/.ssh/id_rsa.pub`" && cat /root/.ssh/authorized_keys | grep -v "$myPUBKEY";'; # show only;
+                           ssh "root@"$DESTINATIONHOST -o PasswordAuthentication=no 'export myPUBKEY="`cat /home/'$USER'/.ssh/id_rsa.pub`" && cat /root/.ssh/authorized_keys | grep -v "$myPUBKEY" > /root/.ssh/authorized_keys.new';
+
+                           printf " ${yellow}-> ${orange}%s${reset}\n" "remove authorized_keys && move authorized_keys.new to authorized_keys"
+                           ssh "root@"$DESTINATIONHOST -o PasswordAuthentication=no 'rm /root/.ssh/authorized_keys && mv /root/.ssh/authorized_keys.new /root/.ssh/authorized_keys'
+                  else
+                           printf " ${bold}${red}!${reset} ${dimyellow}%s${reset}\n" "no id_rsa.pub found at $DESTINATIONHOST/home/$USER/.ssh/id_rsa.pub"
+                  fi;
+            else
+                  printf " ${yellow}* ${dimyellow}%s${reset}\n" "removing id in ~/.ssh/authorized_keys on $DESTINATIONUSER@$DESTINATIONHOST"
+
+                  if ssh $DESTINATIONUSER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'export myPUBKEY="`cat ~/.ssh/id_rsa.pub`" && cat ~/.ssh/authorized_keys | grep "$myPUBKEY"; ' >/dev/null 2>&1; then
+#>/dev/null 2>&1; then
+                           printf " ${yellow}-> ${orange}%s${reset}\n" "backup id in $DESTINATIONUSER@$DESTINATIONHOST/ ~/.ssh/authorized_keys.bak"
+                           ssh $DESTINATIONUSER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'cp ~/.ssh/authorized_keys ~/.ssh/authorized_keys.bak'
+
+                           printf " ${yellow}-> ${orange}%s${reset}\n" "generate $DESTINATIONUSER@$DESTINATIONHOST/ ~/.ssh/authorized_keys.new"
+                           ssh $DESTINATIONUSER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'export myPUBKEY="`cat ~/.ssh/id_rsa.pub`" && cat ~/.ssh/authorized_keys | grep -v "$myPUBKEY";'; # show only;
+                           ssh $DESTINATIONUSER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'export myPUBKEY="`cat ~/.ssh/id_rsa.pub`" && cat ~/.ssh/authorized_keys | grep -v "$myPUBKEY" > ~/.ssh/authorized_keys.new;';
+
+                           printf " ${yellow}-> ${orange}%s${reset}\n" "remove authorized_keys && move authorized_keys.new to authorized_keys"
+                           ssh $DESTINATIONUSER"@"$DESTINATIONHOST -o PasswordAuthentication=no 'rm ~/.ssh/authorized_keys; mv ~/.ssh/authorized_keys.new ~/.ssh/authorized_keys;'
+
+                  else
+                           printf " ${bold}${red}!${reset} ${dimyellow}%s${reset}\n" "no id_rsa.pub found at $DESTINATIONHOST$HOME/.ssh/"
+                  fi;
+            fi;
+      fi;
+fi;
+
+exit $?

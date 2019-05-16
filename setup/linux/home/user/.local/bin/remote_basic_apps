@@ -1,0 +1,66 @@
+#!/bin/bash
+########################################################################
+# install basics for a ubuntu-18.04 server
+# by referencing the array APPS in app-list.sh
+
+#. ~/.local/bin/tput_init-colors
+. tput_init-colors
+
+
+fileExist () { if [ -e "$1" ] ; then return 0; else return 1; fi; }
+
+exec_app-get () {
+      local COMMAND=$1;
+      #echo "insalling ${#APPS[@]} applications";
+      printf "${cyan}%s${reset}\n" "# installing ${#APPS[@]} basic-applications for bbpro";
+      for (( i=0; $i < ${#APPS[@]}; i+=1 )); do
+            KEY=${KEYS[$i]};
+            APPSTRING=$APPSTRING"${APPS[$KEY]} "
+            wait
+      done;
+      MSG="sudo apt-get -y $COMMAND $APPSTRING"
+      printf "${yellow}*${reset} %s\n" "${MSG}"
+      sudo apt-get -y $COMMAND $APPSTRING;
+}
+
+
+APPLIST=~/.local/bin/remote_basic_app-list.sh
+if ! fileExist $APPLIST; then
+      echo " * no $APPLIST !"; 
+      exit 1;
+else
+      # include the array
+      . $APPLIST;
+fi;
+
+ret=1;
+case "$1" in
+   install)
+      sudo apt-get -y update
+      exec_app-get install
+      ret=$?;
+      sudo apt-get -y upgrade
+   ;;
+   remove)
+      exec_app-get remove
+      ret=$?;
+      sudo apt -y autoremove
+   ;;
+   purge)
+      exec_app-get purge
+      ret=$?;
+      sudo apt -y autoremove
+   ;;
+   *)
+      printf "usage: remote_basics-apps [install|remove|purge]"
+   ;;
+esac
+
+if [ $ret -eq 0 ]; then 
+      printf "${green}%s${reset}\n" "done"; 
+else 
+      printf "\n${red}%s${reset}\n" "failed ${cyan}($ret)"; 
+fi;
+
+exit $ret
+
